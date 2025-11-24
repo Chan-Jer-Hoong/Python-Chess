@@ -269,7 +269,7 @@ def check_valid_move(board : dict, cur_piece : str, piece_start_pos : str, piece
                 print("can't move there")
                 return False
         # Going Up
-        if start_rank > end_rank:
+        elif start_rank > end_rank:
             print("entered up")
             # Left
             if FILE_LETTER.index(start_file) > FILE_LETTER.index(end_file):
@@ -297,48 +297,96 @@ def check_valid_move(board : dict, cur_piece : str, piece_start_pos : str, piece
                 else:
                     print("It isn't going diagonal")
                     return False
-            else:
-                # Debug print
-                print("piece start pos:", board[piece_start_pos][PieceInfo.PIECE.value], "\n", "piece end pos:", board[piece_end_pos][PieceInfo.PIECE.value], "\n" ,"piece color:", board[piece_start_pos][PieceInfo.COLOUR.value], "\n" ,"black piece rank after subtraction:", start_rank - end_rank, "\n" ,"white piece rank after subtraction:", end_rank - start_rank)
-                print("can't move there")
-                return False
-
-        '''
-        # Going Down
-        if end_rank > start_rank:
-            # Right
-            if end_file == FILE_LETTER[FILE_LETTER.index(start_file) + (end_rank - start_rank)]:
-                return True
-            # Left
-            elif end_file == FILE_LETTER[FILE_LETTER.index(start_file) - (end_rank - start_rank)]:
-                return True
-            else:
-                # Debug print
-                print("piece start pos:", board[piece_start_pos][PieceInfo.PIECE.value], "\n", "piece end pos:", board[piece_end_pos][PieceInfo.PIECE.value], "\n" ,"piece color:", board[piece_start_pos][PieceInfo.COLOUR.value], "\n" ,"black piece rank after subtraction:", start_rank - end_rank, "\n" ,"white piece rank after subtraction:", end_rank - start_rank)
-                print("can't move there")
-                return False
-        # Going up
-        elif end_rank < start_rank:
-            # Right
-            if end_file == FILE_LETTER[FILE_LETTER.index(start_file) + (start_rank - end_rank)]:
-                return True
-            # Left
-            elif end_file == FILE_LETTER[FILE_LETTER.index(start_file) - (start_rank - end_rank)]:
-                return True
-            else:
-                # Debug print
-                print("piece start pos:", board[piece_start_pos][PieceInfo.PIECE.value], "\n", "piece end pos:", board[piece_end_pos][PieceInfo.PIECE.value], "\n" ,"piece color:", board[piece_start_pos][PieceInfo.COLOUR.value], "\n" ,"black piece rank after subtraction:", start_rank - end_rank, "\n" ,"white piece rank after subtraction:", end_rank - start_rank)
-                print("can't move there")
-                return False
-        # Anything else
         else:
             # Debug print
             print("piece start pos:", board[piece_start_pos][PieceInfo.PIECE.value], "\n", "piece end pos:", board[piece_end_pos][PieceInfo.PIECE.value], "\n" ,"piece color:", board[piece_start_pos][PieceInfo.COLOUR.value], "\n" ,"black piece rank after subtraction:", start_rank - end_rank, "\n" ,"white piece rank after subtraction:", end_rank - start_rank)
             print("can't move there")
             return False
-        '''
     elif cur_player_piece == CHESS_PIECE[Piece.QUEEN.value]:
-        pass
+        # Going Down
+        if start_rank < end_rank and start_rank != end_rank and start_file != end_file: 
+            # Left
+            if FILE_LETTER.index(start_file) > FILE_LETTER.index(end_file):
+                print("entered down left")
+                # Checks to see if the given file is the same as the expected file from the list, if not that means it isn't moving correctly
+                if end_file == FILE_LETTER[FILE_LETTER.index(start_file) - (end_rank - start_rank)]:
+                    # Going left requires reverse indexing for the file, so negative steps are used but since its going down, rank stays positive
+                    for file, rank in zip(range(FILE_LETTER.index(start_file) - 1, FILE_LETTER.index(end_file) - 1, -1), range(start_rank + 1, end_rank + 1)):
+                        if board[FILE_LETTER[file] + str(rank)][PieceInfo.PIECE.value] != square:
+                            print("failed at:", FILE_LETTER[file] + str(rank))
+                            return False
+                    return True
+                else:
+                    print("It isn't going diagonal")
+                    return False
+            # Right
+            elif FILE_LETTER.index(start_file) < FILE_LETTER.index(end_file):
+                print("entered down right")
+                if end_file == FILE_LETTER[FILE_LETTER.index(start_file) + (end_rank - start_rank)]:
+                    for file, rank in zip(range(FILE_LETTER.index(start_file) + 1, FILE_LETTER.index(end_file) + 1), range(start_rank + 1, end_rank + 1)):
+                        if board[FILE_LETTER[file] + str(rank)][PieceInfo.PIECE.value] != square:
+                            print("failed at:", FILE_LETTER[file] + str(rank))
+                            return False
+                    return True
+                else:
+                    print("It isn't going diagonal")
+                    return False
+            else:
+                # Debug print
+                print("piece start pos:", board[piece_start_pos][PieceInfo.PIECE.value], "\n", "piece end pos:", board[piece_end_pos][PieceInfo.PIECE.value], "\n" ,"piece color:", board[piece_start_pos][PieceInfo.COLOUR.value], "\n" ,"black piece rank after subtraction:", start_rank - end_rank, "\n" ,"white piece rank after subtraction:", end_rank - start_rank)
+                print("can't move there")
+                return False
+        # Going Up
+        elif start_rank > end_rank and start_rank != end_rank and start_file != end_file:
+            print("entered up")
+            # Left
+            if FILE_LETTER.index(start_file) > FILE_LETTER.index(end_file):
+                print("entered up left")
+                # Checks to see if the given file is the same as the expected file from the list, if not that means it isn't moving correctly
+                if end_file == FILE_LETTER[FILE_LETTER.index(start_file) - (start_rank - end_rank)]:
+                    # Since its going up and left, rank and file needs to be reversed
+                    for file, rank in zip(range(FILE_LETTER.index(start_file) - 1, FILE_LETTER.index(end_file) - 1, -1), range(start_rank - 1, end_rank - 1, -1)):
+                        if board[FILE_LETTER[file] + str(rank)][PieceInfo.PIECE.value] != square:
+                            print("failed at:", FILE_LETTER[file] + str(rank))
+                            return False
+                    return True
+                else:
+                    print("It isn't going diagonal")
+                    return False
+            # Right
+            elif FILE_LETTER.index(start_file) < FILE_LETTER.index(end_file):
+                print("entered up right")
+                if end_file == FILE_LETTER[FILE_LETTER.index(start_file) + (start_rank - end_rank)]:
+                    for file, rank in zip(range(FILE_LETTER.index(start_file) + 1, FILE_LETTER.index(end_file) + 1), range(start_rank - 1, end_rank - 1, -1)):
+                        if board[FILE_LETTER[file] + str(rank)][PieceInfo.PIECE.value] != square:
+                            print("failed at:", FILE_LETTER[file] + str(rank))
+                            return False
+                    return True
+                else:
+                    print("It isn't going diagonal")
+                    return False
+        # Going left and right
+        elif start_rank == end_rank and start_file != end_file:
+            print("entered left and right")
+            for path in range(FILE_LETTER.index(start_file) + 1, FILE_LETTER.index(end_file) + 1):
+                print(path, str(start_rank))
+                if board[FILE_LETTER[path] + str(start_rank)][PieceInfo.PIECE.value] != square:
+                    return False
+                return True
+        # Going up and down
+        elif start_file == end_file and start_rank != end_rank:
+            print("enetered up and down")
+            # Add 1 to start rank so it does not count the rook's original position, add 1 to end rank to ensure it counts the last spot (if a6 is chosen, it will go to a5 and stop)
+            for path in range(start_rank + 1, end_rank + 1):
+                print(start_file, str(path))
+                if board[start_file + str(path)][PieceInfo.PIECE.value] != square:
+                    return False
+            return True
+        else:
+            # Debug print
+            print("piece start pos:", board[piece_start_pos][PieceInfo.PIECE.value], "\n", "piece end pos:", board[piece_end_pos][PieceInfo.PIECE.value], "\n" ,"piece color:", board[piece_start_pos][PieceInfo.COLOUR.value], "\n" ,"black piece rank after subtraction:", start_rank - end_rank, "\n" ,"white piece rank after subtraction:", end_rank - start_rank)
+            print("can't move there")
+            return False
     elif cur_player_piece == CHESS_PIECE[Piece.KING.value]:
         pass
     else:
