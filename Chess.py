@@ -239,7 +239,7 @@ def check_valid_move(board : dict, cur_piece : str, piece_start_pos : str, piece
             print("going down")
             # Left
             if FILE_LETTER.index(start_file) > FILE_LETTER.index(end_file):
-                print("entered left")
+                print("entered down left")
                 # Checks to see if the given file is the same as the expected file from the list, if not that means it isn't moving correctly
                 if end_file == FILE_LETTER[FILE_LETTER.index(start_file) - (end_rank - start_rank)]:
                     # Going left requires reverse indexing for the file, so negative steps are used but since its going down, rank stays positive
@@ -253,7 +253,7 @@ def check_valid_move(board : dict, cur_piece : str, piece_start_pos : str, piece
                     return False
             # Right
             elif FILE_LETTER.index(start_file) < FILE_LETTER.index(end_file):
-                print("entered right")
+                print("entered down right")
                 if end_file == FILE_LETTER[FILE_LETTER.index(start_file) + (end_rank - start_rank)]:
                     for file, rank in zip(range(FILE_LETTER.index(start_file) + 1, FILE_LETTER.index(end_file) + 1), range(start_rank + 1, end_rank + 1)):
                         if board[FILE_LETTER[file] + str(rank)][PieceInfo.PIECE.value] != square:
@@ -268,6 +268,41 @@ def check_valid_move(board : dict, cur_piece : str, piece_start_pos : str, piece
                 print("piece start pos:", board[piece_start_pos][PieceInfo.PIECE.value], "\n", "piece end pos:", board[piece_end_pos][PieceInfo.PIECE.value], "\n" ,"piece color:", board[piece_start_pos][PieceInfo.COLOUR.value], "\n" ,"black piece rank after subtraction:", start_rank - end_rank, "\n" ,"white piece rank after subtraction:", end_rank - start_rank)
                 print("can't move there")
                 return False
+        # Going Up
+        if start_rank > end_rank:
+            print("entered up")
+            # Left
+            if FILE_LETTER.index(start_file) > FILE_LETTER.index(end_file):
+                print("entered up left")
+                # Checks to see if the given file is the same as the expected file from the list, if not that means it isn't moving correctly
+                if end_file == FILE_LETTER[FILE_LETTER.index(start_file) - (start_rank - end_rank)]:
+                    # Since its going up and left, rank and file needs to be reversed
+                    for file, rank in zip(range(FILE_LETTER.index(start_file) - 1, FILE_LETTER.index(end_file) - 1, -1), range(start_rank - 1, end_rank - 1, -1)):
+                        if board[FILE_LETTER[file] + str(rank)][PieceInfo.PIECE.value] != square:
+                            print("failed at:", FILE_LETTER[file] + str(rank))
+                            return False
+                    return True
+                else:
+                    print("It isn't going diagonal")
+                    return False
+            # Right
+            elif FILE_LETTER.index(start_file) < FILE_LETTER.index(end_file):
+                print("entered up right")
+                if end_file == FILE_LETTER[FILE_LETTER.index(start_file) + (start_rank - end_rank)]:
+                    for file, rank in zip(range(FILE_LETTER.index(start_file) + 1, FILE_LETTER.index(end_file) + 1), range(start_rank - 1, end_rank - 1, -1)):
+                        if board[FILE_LETTER[file] + str(rank)][PieceInfo.PIECE.value] != square:
+                            print("failed at:", FILE_LETTER[file] + str(rank))
+                            return False
+                    return True
+                else:
+                    print("It isn't going diagonal")
+                    return False
+            else:
+                # Debug print
+                print("piece start pos:", board[piece_start_pos][PieceInfo.PIECE.value], "\n", "piece end pos:", board[piece_end_pos][PieceInfo.PIECE.value], "\n" ,"piece color:", board[piece_start_pos][PieceInfo.COLOUR.value], "\n" ,"black piece rank after subtraction:", start_rank - end_rank, "\n" ,"white piece rank after subtraction:", end_rank - start_rank)
+                print("can't move there")
+                return False
+
         '''
         # Going Down
         if end_rank > start_rank:
