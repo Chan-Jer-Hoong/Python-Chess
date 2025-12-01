@@ -430,7 +430,43 @@ def check_valid_move(board : dict, cur_piece : str, piece_start_pos : str, piece
             print("can't move there")
             return False
     elif cur_player_piece == CHESS_PIECE[Piece.KING.value]:
-        pass
+        # Going down
+        if start_rank < end_rank and start_file == end_file and (end_rank - start_rank) == 1:
+            print("King entered down")
+            return True
+        # Going up
+        elif start_rank > end_rank and start_file == end_file and (start_rank - end_rank) == 1:
+            print("King entered up")
+            return True
+        # Going left
+        elif FILE_LETTER.index(start_file) > FILE_LETTER.index(end_file) and start_rank == end_rank and (FILE_LETTER.index(end_file) - FILE_LETTER.index(start_file)) == 1:
+            print("King entered left")
+            return True
+        # Going right
+        elif FILE_LETTER.index(start_file) < FILE_LETTER.index(end_file) and start_rank == end_rank and (FILE_LETTER.index(start_file) - FILE_LETTER.index(end_file)) == 1:
+            print("King entered right")
+            return True
+        # Going up right
+        elif start_rank > end_rank and FILE_LETTER.index(start_file) < FILE_LETTER.index(end_file) and (FILE_LETTER.index(start_file) - FILE_LETTER.index(end_file) == 1 and start_rank - end_rank == 1):
+            print("King entered up right")
+            return True
+        # Going up left
+        elif start_rank > end_rank and FILE_LETTER.index(start_file) > FILE_LETTER.index(end_file) and (FILE_LETTER.index(end_file) - FILE_LETTER.index(start_file) == 1 and start_rank - end_rank == 1):
+            print("King entered up left")
+            return True
+        # Going down right
+        elif start_rank < end_rank and FILE_LETTER.index(start_file) < FILE_LETTER.index(end_file) and (FILE_LETTER.index(start_file) - FILE_LETTER.index(end_file) == 1 and end_rank - start_rank == 1):
+            print("King entered down right")
+            return True
+        # Going down left
+        elif start_rank < end_rank and FILE_LETTER.index(start_file) > FILE_LETTER.index(end_file) and (FILE_LETTER.index(end_file) - FILE_LETTER.index(start_file) == 1 and end_rank - start_rank == 1):
+            print("King entered down left")
+            return True
+        else:
+            # Debug print
+            print("piece start pos:", board[piece_start_pos][PieceInfo.PIECE.value], "\n", "piece end pos:", board[piece_end_pos][PieceInfo.PIECE.value], "\n" ,"piece color:", board[piece_start_pos][PieceInfo.COLOUR.value], "\n" ,"black piece rank after subtraction:", start_rank - end_rank, "\n" ,"white piece rank after subtraction:", end_rank - start_rank)
+            print("can't move there")
+            return False
     else:
         print("\ninvalid piece --> ", cur_player_piece)
 
